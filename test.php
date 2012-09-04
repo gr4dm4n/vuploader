@@ -13,7 +13,13 @@
 			$upload->exit_status('Error! Wrong HTTP method!');
 		}
 		else{
-			$upload->single_upload($_FILES["file"]);
+			//test single upload
+			//$upload->single_upload($_FILES["file"]);
+
+		 /* test multiupload */
+			$files_array = array($_FILES["file"],$_FILES["file1"],$_FILES["file2"],$_FILES["file3"],$_FILES["file4"]);
+			$upload->multi_upload($files_array);
+		
 		}
 	}
 ?>
@@ -23,10 +29,18 @@
  </head>
  <body>
  	<form action="test.php" method="post" enctype="multipart/form-data">
-	<label for="file">Filename:</label>
+
 	<input type="file" name="file" id="file" /> 
 	<br />
-	<input type="hidden " name="send" val="1" />
+	<input type="file" name="file1" id="file1" /> 
+	<br />
+	<input type="file" name="file2" id="file2" /> 
+	<br />
+	<input type="file" name="file3" id="file3" /> 
+	<br />
+	<input type="file" name="file4" id="file4" /> 
+	<br />
+	<input type="hidden" name="send" val="1" />
 	<input type="submit" name="submit" value="Submit" />
 	</form>
  </body>

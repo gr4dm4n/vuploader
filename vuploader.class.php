@@ -4,8 +4,6 @@
  *
  * @author Victor Chavarro {@link http://www.vianch.com Victor Chavarro (victor@vianch.com)}
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * aunque el uso de la función nativa php mysql_connect esta obsoleto la utilizo para mostrar
- * la teoria básica de un conector a MySQL desde PHP (se recomienda el uso de  MySQLi o PDO_MySQL)
  */
 
 /**
@@ -14,7 +12,7 @@
 define('DEBUG',false);
 
 /* demo mode if is true simulates file uploads */
-define('DEMO_MODE', true);
+define('DEMO_MODE', false);
 
 /*default types of files*/
 define('DEFAULT_TYPES', serialize(array('jpg','jpeg','png','gif')));
@@ -34,6 +32,7 @@ class vuploader{
 
    /**
 	* Allowed type of files
+	* @access public
 	* @var array
 	*/
 	public $allowed_types;
@@ -41,8 +40,16 @@ class vuploader{
     /**
      * dir where the files will be uploaded
      * @var string
+     * @access public
      */
 	public $upload_dir;
+
+	/**
+     * print status on the Screen
+     * @var bool
+     * @access private
+     */
+	private $show_status = true;
 
 	/**
  	 * Create a new class instance,
@@ -88,7 +95,7 @@ class vuploader{
 
 				if(DEMO_MODE){	
 					$this->printer($file);
-					$this->exit_status('File Upload:>> '.implode(',',$file).' - Uploads are ignored in demo mode.');
+					$this->status('File Upload:>> '.implode(',',$file).' - Uploads are ignored in demo mode.');
 				}
 				else{
 					if( $file['size'] <= MAX_FILE_SIZE ){
@@ -102,11 +109,11 @@ class vuploader{
 						// Move the uploaded file from the temporary 
 						// directory to the uploads folder:
 						if(move_uploaded_file($file['tmp_name'], $this->upload_dir."/".$file['name'])){
-							$this->exit_status('File was uploaded successfuly!');
+							$this->status('File was uploaded successfuly!');
 						}
 					}
 					else{
-						$this->exit_status('file  exceeds the allowed size');
+						$this->exit_status('file  exceeds the allowed size in file: '.$file['name']);
 					}
 				
 				}
@@ -120,9 +127,15 @@ class vuploader{
 	}
 
 	public function multi_upload($file_array){
+		
+		//turn off status in multiupload
+		$this->show_status = false;
+		
 		foreach ($file_array as  $file) {
 			$this->single_upload($file);
 		}
+
+		$this->exit_status('All files upload successfuly');
 	}
 
 	public function delete_file(){
@@ -145,6 +158,18 @@ class vuploader{
 	public function exit_status($str){
 		$this->printer(json_encode(array('status'=>$str)));
 		exit;
+	}
+
+	/**
+	 * Status showing status log
+	 * @param string
+	 */
+	public function status($str){
+		$status = json_encode(array('status'=>$str));
+		if($this->show_status){
+			$this->printer($status);
+		}
+		return $status;		
 	}
 
 	/**
