@@ -138,18 +138,6 @@ class vuploader{
 		$this->exit_status('All files upload successfuly');
 	}
 
-	public function delete_file(){
-
-	}
-
-	private function mk_dir(){
-
-	}
-
-	private function delete_dir(){
-
-	}
-
 
 	/**
 	 * output when error happend,
