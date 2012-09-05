@@ -5,7 +5,7 @@
  	<script type="text/javascript" src="scripts.js"></script>
  </head>
  <body>
- 	<form action="test.php" method="post" enctype="multipart/form-data">
+ 	<form action="upload.php" method="post" enctype="multipart/form-data">
 
 	<input type="file" name="file" id="file" /> 
 	<br />
